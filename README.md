@@ -21,29 +21,7 @@ A web app for practicing interviews against a specific job description, with voi
 
 </div>
 
----
 
-## Table of Contents
-
-1. [About](#about)
-2. [Screenshots](#screenshots)
-3. [Features](#features)
-4. [How It Works](#how-it-works)
-5. [Tech Stack](#tech-stack)
-6. [Architecture](#architecture)
-7. [Project Structure](#project-structure)
-8. [Database Schema](#database-schema)
-9. [Getting Started](#getting-started)
-10. [Environment Variables](#environment-variables)
-11. [Scripts](#scripts)
-12. [Security](#security)
-13. [Roadmap](#roadmap)
-14. [Contributing](#contributing)
-15. [Troubleshooting](#troubleshooting)
-16. [License](#license)
-17. [Author](#author)
-
----
 
 ## About
 
@@ -57,21 +35,7 @@ This project lets you create a workspace for a job you are applying to by pastin
 
 It is meant for students, fresh graduates, people changing careers, and anyone who wants a low-pressure way to practice before the real thing. It is also a reasonably complete example of a full-stack AI app built with the Next.js App Router.
 
----
 
-## Screenshots
-
-Put your screenshots in `docs/screenshots/` and update the file names below.
-
-| Dashboard | Mock Interview |
-| :---: | :---: |
-| ![Dashboard](./docs/screenshots/dashboard.png) | ![Interview](./docs/screenshots/interview.png) |
-
-| Question Practice | Resume Analysis |
-| :---: | :---: |
-| ![Questions](./docs/screenshots/questions.png) | ![Resume](./docs/screenshots/resume.png) |
-
----
 
 ## Features
 
@@ -84,13 +48,6 @@ Put your screenshots in `docs/screenshots/` and update the file names below.
 - Create one workspace per job, with a title, experience level and the full job description
 - All AI features use that workspace as context
 - Keep several applications side by side
-
-### Voice mock interviews
-- Talk to an AI interviewer in real time using Hume AI's voice interface
-- Questions come from the job description and your experience level
-- The interviewer asks follow-up questions based on what you say
-- After the session you get written feedback covering strengths, weak spots, communication and technical depth
-- Past interviews are saved so you can look back at them
 
 ### Technical question practice
 - Generate questions at easy, medium or hard difficulty
@@ -343,158 +300,3 @@ npm run dev
 ```
 
 Open http://localhost:3000.
-
-### 7. Clerk webhooks (local development)
-
-To get new users into your local database, point a Clerk webhook at your local Inngest endpoint through a tunnel such as ngrok. Subscribe to the `user.created`, `user.updated` and `user.deleted` events.
-
----
-
-## Environment Variables
-
-Create a `.env` file in the project root:
-
-```env
-# Database
-DB_HOST=
-DB_PORT=5432
-DB_USER=
-DB_PASSWORD=
-DB_NAME=
-
-# Clerk
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-CLERK_WEBHOOK_SECRET=
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-
-# Google Gemini
-GEMINI_API_KEY=
-
-# Hume AI
-HUME_API_KEY=
-HUME_SECRET_KEY=
-NEXT_PUBLIC_HUME_CONFIG_ID=
-
-# Inngest
-INNGEST_EVENT_KEY=
-INNGEST_SIGNING_KEY=
-
-# Arcjet
-ARCJET_KEY=
-```
-
-Do not commit `.env`. Make sure it is in `.gitignore`.
-
-| Variable | Used for |
-| --- | --- |
-| `DB_*` | PostgreSQL connection |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk, browser side |
-| `CLERK_SECRET_KEY` | Clerk, server side |
-| `CLERK_WEBHOOK_SECRET` | Verifying Clerk webhooks |
-| `GEMINI_API_KEY` | Questions, feedback and resume analysis |
-| `HUME_API_KEY`, `HUME_SECRET_KEY` | Authenticating the voice interviewer |
-| `NEXT_PUBLIC_HUME_CONFIG_ID` | Voice configuration |
-| `INNGEST_*` | Background jobs |
-| `ARCJET_KEY` | Rate limiting and bot protection |
-
----
-
-## Scripts
-
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Start the dev server |
-| `npm run build` | Build the app |
-| `npm run start` | Start the built app |
-| `npm run lint` | Run the linter |
-| `npm run db:generate` | Generate migrations from the schema |
-| `npm run db:migrate` | Apply migrations |
-| `npm run db:push` | Push the schema straight to the database |
-| `npm run db:studio` | Open Drizzle Studio |
-
-Check `package.json` for the exact script names in this repo.
-
----
-
-## Security
-
-- Clerk middleware protects every authenticated route
-- Arcjet handles rate limiting, bot detection and common attack patterns
-- User input is validated with Zod
-- Database queries are scoped to the signed-in user
-- Secrets only live on the server, and only `NEXT_PUBLIC_*` values reach the browser
-
-If you find a vulnerability, please report it through a private security advisory on GitHub rather than a public issue.
-
----
-
-## Roadmap
-
-- [x] Authentication and user sync
-- [x] Job workspaces
-- [x] Voice mock interviews
-- [x] Technical question practice
-- [x] Resume analysis
-- [ ] Behavioral interview mode (STAR method)
-- [ ] Company-specific preparation
-- [ ] Progress charts across sessions
-- [ ] Downloadable PDF reports
-- [ ] In-browser coding round
-- [ ] More interview languages
-
-If you have a suggestion, [open an issue](https://github.com/avi-nash-0211/AI-Powered-Job-Preparation-Interview-Platform/issues/new).
-
----
-
-## Contributing
-
-Contributions are welcome.
-
-1. Fork the repository
-2. Create a branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -m "feat: describe your change"`
-4. Push the branch: `git push origin feature/your-feature`
-5. Open a pull request
-
-Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `refactor:`, `chore:`).
-
-Before opening a pull request, run `npm run lint` and `npm run build`, keep types strict (no `any`), and validate any new input with Zod.
-
----
-
-## Troubleshooting
-
-**The app won't start and complains about environment variables.**
-Check that every variable from `.env.example` is present in `.env`, then restart the dev server.
-
-**New users don't show up in the database.**
-User sync goes through Clerk webhooks and Inngest. Make sure the Inngest dev server is running, the webhook URL is correct, and `CLERK_WEBHOOK_SECRET` matches.
-
-**The voice interview doesn't start.**
-Allow microphone access in your browser and double-check your Hume keys and config ID.
-
-**I get "Too Many Requests".**
-Arcjet is rate limiting the endpoint. Wait a bit and try again, or adjust the limits in the Arcjet config.
-
-**Database connection errors.**
-Check the `DB_*` values and that your Neon project is not suspended. Some providers require SSL.
-
----
-
-## License
-
-Released under the MIT License. See [LICENSE](./LICENSE) for details.
-
----
-
-## Author
-
-Avinash
-
-- GitHub: [@avi-nash-0211](https://github.com/avi-nash-0211)
-- LinkedIn: `https://linkedin.com/in/your-profile`
-- Email: `your-email@example.com`
-
-If you find this project useful, a star on the repository is appreciated.
