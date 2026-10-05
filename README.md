@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./assets/banner.svg" alt="AI-Powered Job Preparation and Interview Platform" width="100%" />
+<img src="./assets/banner.png" alt="AI-Powered Job Preparation and Interview Platform" width="100%" />
 
 <br />
 
